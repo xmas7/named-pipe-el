@@ -7,7 +7,13 @@ This package is not on melpa but can be installed with your favorate from-source
 
 #+BEGIN_SRC elisp
 (use-package named-pipe
-  :straight (named-pipe :type git :host github :repo "Stebalien/named-pipe.el"))
+  :straight (named-pipe :type git :host github :repo "Stebalien/named-pipe.el")
+  :defer t
+  :config
+  ;; add the epipe script to the PATH
+  (when-let* ((libfile (locate-library "named-pipe"))
+              (bindir (concat (file-name-directory libfile) "bin")))
+    (add-to-list 'exec-path bindir)))
 #+END_SRC
 
 While not required, I also recommend the ~xterm-color~ package. When present, this package will use it to process ANSI escape codes instead of the built-in ~ansi~ package, producing better results.
