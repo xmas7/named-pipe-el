@@ -86,8 +86,12 @@ This mode should not be manually enabled."
 	(let* ((no-mode (eq major-mode 'fundamental-mode))
 	       (inhibit-read-only t)
 	       (filter (cond
-			((and no-mode (eq named-pipe-pager-colorize t)) (or (bound-and-true-p 'xterm-color-filter) 'ansi-color-apply))
-			((eq named-pipe-pager-colorize 'strip) 'ansi-color-filter-apply)
+			((and no-mode (eq named-pipe-pager-colorize t))
+			 (if (fboundp 'xterm-color-filter)
+			     'xterm-color-filter
+			   'ansi-color-apply))
+			((eq named-pipe-pager-colorize 'strip)
+			 'ansi-color-filter-apply)
 			(t 'identity))))
 	  (goto-char (process-mark proc))
 	  (insert (funcall filter string))
