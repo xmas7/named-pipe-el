@@ -35,6 +35,7 @@
 ;;; Code:
 (eval-when-compile (require 'cl-lib))
 (require 'ansi-color)
+(require 'view)
 
 (defgroup named-pipe-pager nil
   "Pager for reading from named pipes."
@@ -63,20 +64,6 @@
 		 (const :tag "Off" nil)
 		 (function :tag "Custom"))
   :group 'named-pipe-pager)
-
-(defvar named-pipe-pager-mode-map (make-sparse-keymap))
-
-(define-minor-mode named-pipe-pager-mode
-  "Minor mode applied to all named-pipe pagers.
-By default, this mode does nothing except the buffer to be
-read-only. However, it provides a convenient place to attach
-keybindings and hooks that should apply to all pagers.
-
-This mode should not be manually enabled."
-  :group 'named-pipe-pager
-  :keymap 'named-pipe-pager-mode-map
-  :after-hook 'named-pipe-pager-mode-hook
-  (read-only-mode))
 
 (defun named-pipe--pager-filter (proc string)
   (when (buffer-live-p (process-buffer proc))
@@ -133,7 +120,7 @@ This mode should not be manually enabled."
   "Read the named pipe into a read-only 'pager' buffer."
   (with-current-buffer buffer
     (named-pipe-read pipe-name :filter #'named-pipe--pager-filter)
-    (named-pipe-pager-mode)
+    (view-mode)
     (pop-to-buffer buffer)))
 
 (provide 'named-pipe)
