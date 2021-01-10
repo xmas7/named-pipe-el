@@ -1,0 +1,28 @@
+#+TITLE: named-pipe.el
+
+An emacs package for piping text into emacs, optionally displaying it in a "pager" buffer.
+
+* Install
+This package is not on melpa but can be installed with your favorate from-source emacs package manager (such as quelpa or straight).
+
+#+BEGIN_SRC elisp
+(use-package named-pipe
+  :straight (named-pipe :type git :host github :repo "Stebalien/named-pipe.el"))
+#+END_SRC
+
+While not required, I also recommend the ~xterm-color~ package. When present, this package will use it to process ANSI escape codes instead of the built-in ~ansi~ package, producing better results.
+
+* Examples
+** Pager
+The =epipe.sh= script can be used as a pager to pipe text into emacs buffers. By default, the pager mode will also process ANSI escape codes so colors will be preserved (like ~less -R~).
+
+#+BEGIN_EXAMPLE bash
+$ PAGER=/path/to/epipe.sh git log
+#+END_EXAMPLE
+
+** Status FIFO
+If you have a t0ol that can send status messages to a FIFO (commonly used with tools like ~i3-bar~, ~dzen2~, ~conky~, ~lemonbar~ etc.), you can use this package to display these messages in emacs.
+
+#+BEGIN_SRC elisp
+(named-pipe-readlines "status.fifo" (lambda (line) (message "alert: %s" line)))
+#+END_SRC
